@@ -1,7 +1,13 @@
+import { useState } from "react";
 import { ReturnBook } from "./ReturnBook";
+import BookModel from "../../../models/BookModel";
 
 // import Images from './../../Images';
 export const Carousel = () =>{
+    const [books, setBooks] = useState<BookModel[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [httpError, setHttpError] = useState(null);
+    
     return(
         <div className='container mt-5' style={{ height: 550 }}>
             <div className='homepage-carousel-title'>
