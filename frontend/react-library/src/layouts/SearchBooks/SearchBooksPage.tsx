@@ -2,23 +2,31 @@ import { useEffect, useState } from "react";
 import BookModel from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { SearchBook } from "./components/SearchBook";
+import { Pagination } from "../Utils/Pagination";
 
 export const SearchBooksPage = () => {
 
     const [books, setBooks] = useState<BookModel[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [httpsError, setHttpError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [booksPerPage] = useState(5);
+    const [totalAmountOfBooks, setTotalAmountOfBooks] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchBooks = async () => {
             const baseUrl = "http://localhost:8080/api/books";
-            const url = `${baseUrl}?page=0&size=5`
+            const url = `${baseUrl}?page=${currentPage - 1}&size=${booksPerPage}`
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error("Something went wrong while fetching")
             }
             const responseJSON = await response.json();
             const responseData = responseJSON._embedded.books;
+
+            setTotalAmountOfBooks(responseJSON.page.totalElements);
+            setTotalPages(responseJSON.page.totalPages);
 
             const loadedBooks: BookModel[] = [];
             for (const key in responseData) {
@@ -44,7 +52,7 @@ export const SearchBooksPage = () => {
             setIsLoading(false);
             setHttpError(error.message);
         })
-    }, []);
+    }, [currentPage]);
 
     if (isLoading) {
         return (
@@ -58,6 +66,13 @@ export const SearchBooksPage = () => {
             </div>
         );
     }
+
+    const indexOfLastBook: number = currentPage * booksPerPage;
+    const indexOfFirstBook: number = indexOfLastBook - booksPerPage;
+    let lastItem = booksPerPage * currentPage <= totalAmountOfBooks ?
+        booksPerPage * currentPage : totalAmountOfBooks;
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return (
         <div>
@@ -120,9 +135,12 @@ export const SearchBooksPage = () => {
                     1 to 5 items of 22
                 </p>
                 {books.map(book => (
-                   
+
                     <SearchBook book={book} key={book.id} />
                 ))}
+                {totalPages > 1 &&
+                    <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
+                }
             </div>
         </div>
     );
