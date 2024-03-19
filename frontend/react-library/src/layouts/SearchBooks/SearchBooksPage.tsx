@@ -130,10 +130,10 @@ export const SearchBooksPage = () => {
                     </div>
                 </div>
                 <div className='mt-3'>
-                    <h5>Number of results: </h5>
+                    <h5>Number of results: {totalAmountOfBooks}</h5>
                 </div>
                 <p>
-                    1 to 5 items of 22
+                    {indexOfFirstBook + 1} to {lastItem} items of {totalAmountOfBooks}
                 </p>
                 {books.map(book => (
 
