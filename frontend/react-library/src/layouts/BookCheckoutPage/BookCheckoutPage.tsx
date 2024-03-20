@@ -10,6 +10,29 @@ export const BookCheckoutPage = () => {
     const bookId = (window.location.pathname).split('/')[2];
     useEffect(() => {
         const fetchBook = async () => {
+            const baseUrl = "http://localhost:8080"
+            const url = `${baseUrl}/api/books/${bookId}`
+
+            const response = await fetch(url);
+
+            if(response.ok){
+                throw new Error("Something went wrong while fetching the book Id: " + bookId);
+            }
+
+            const responeJSON = await response.json();
+
+            const book: BookModel = {
+                id: responeJSON.id,
+                title: responeJSON.title,
+                author: responeJSON.author,
+                description: responeJSON.description,
+                copies: responeJSON.copies,
+                copiesAvailable: responeJSON.copiesAvailable,
+                category: responeJSON.category,
+                img: responeJSON.img
+            }
+            setBook(book);
+            setIsLoading(false);
 
         }
         fetchBook().catch((error) => {
