@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import BookModel from "../../models/BookModel"
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
+import { StarReview } from "../Utils/StarsReview";
 
 export const BookCheckoutPage = () => {
     const [book, setBook] = useState<BookModel>();
@@ -71,6 +72,7 @@ export const BookCheckoutPage = () => {
                             <h2>{book?.title}</h2>
                             <h5 className='text-primary'>{book?.author}</h5>
                             <p className='lead'>{book?.description}</p>
+                            <StarReview rating={4} size={32} />
                         </div>
                     </div>
                 </div>
