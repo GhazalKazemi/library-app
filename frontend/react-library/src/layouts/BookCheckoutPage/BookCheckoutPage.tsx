@@ -10,8 +10,8 @@ export const BookCheckoutPage = () => {
     const bookId = (window.location.pathname).split('/')[2];
     useEffect(() => {
         const fetchBook = async () => {
-            const baseUrl: string = "http://localhost:8080"
-            const url = `http://localhost:8080/api/books/${bookId}`
+            const baseUrl = "http://localhost:8080"
+            const url = `${baseUrl}/api/books/${bookId}`
 
             const response = await fetch(url);
 
