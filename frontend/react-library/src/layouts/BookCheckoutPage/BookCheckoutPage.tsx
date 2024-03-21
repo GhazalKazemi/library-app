@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import BookModel from "../../models/BookModel"
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
-import { StarReview } from "../Utils/StarsReview";
+import { StarsReview } from "../Utils/StarsReview";
 import { CheckoutAndReview } from "./CheckoutAndReviewBox";
 import ReviewModel from "../../models/ReviewModel";
 import { error } from "console";
@@ -125,7 +125,7 @@ export const BookCheckoutPage = () => {
                             <h2>{book?.title}</h2>
                             <h5 className='text-primary'>{book?.author}</h5>
                             <p className='lead'>{book?.description}</p>
-                            <StarReview rating={4} size={32} />
+                            <StarsReview rating={4} size={32} />
                         </div>
                     </div>
                     <CheckoutAndReview book={book} mobile={false} />
@@ -147,7 +147,7 @@ export const BookCheckoutPage = () => {
                         <h2>{book?.title}</h2>
                         <h5 className='text-primary'>{book?.author}</h5>
                         <p className='lead'>{book?.description}</p>
-                        <StarReview rating={4} size={32} />
+                        <StarsReview rating={4} size={32} />
                     </div>
                 </div>
                 <CheckoutAndReview book={book} mobile={true} />
