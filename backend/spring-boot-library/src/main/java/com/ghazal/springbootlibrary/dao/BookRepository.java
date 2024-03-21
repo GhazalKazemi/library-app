@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Integer> {
+public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> findByTitleContaining(@RequestParam("title") String title, Pageable pageable);
     Page<Book> findByCategory(@RequestParam("category") String category, Pageable pageable);
 }
