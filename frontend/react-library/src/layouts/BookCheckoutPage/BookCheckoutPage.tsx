@@ -4,7 +4,6 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import { CheckoutAndReview } from "./CheckoutAndReviewBox";
 import ReviewModel from "../../models/ReviewModel";
-import { error } from "console";
 import { LatestReviews } from "./LatestReviews";
 
 export const BookCheckoutPage = () => {
