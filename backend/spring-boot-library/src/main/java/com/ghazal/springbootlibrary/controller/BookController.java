@@ -22,11 +22,18 @@ public class BookController {
         return bookService.checkoutBook(fakeUserEmail, bookId);
     }
 
-    @GetMapping("/secure/ischeckoedout/byuser")
+    @GetMapping("/secure/ischeckedout/byuser")
     public boolean checkoutBookByUser(@RequestParam Long bookId){
         String fakeUserEmail = "fakeUser@email.com";
 
         return bookService.checkoutBookByUser(fakeUserEmail, bookId);
+    }
+
+    @GetMapping("/secure/currentloans/count")
+    public int currentLoansCount(){
+        String fakeUserEmail = "fakeUser@email.com";
+
+        return bookService.currentLoansCount(fakeUserEmail);
     }
 
 

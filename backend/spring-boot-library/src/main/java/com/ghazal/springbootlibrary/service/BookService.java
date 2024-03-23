@@ -56,4 +56,9 @@ public class BookService {
             return false;
         }
     }
+
+    // get number of the books current user has checked out
+    public int currentLoansCount(String userEmail){
+        return checkoutRepository.findBooksByUserEmail(userEmail).size();
+    }
 }
