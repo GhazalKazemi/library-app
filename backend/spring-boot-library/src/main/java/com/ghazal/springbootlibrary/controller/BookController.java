@@ -22,5 +22,12 @@ public class BookController {
         return bookService.checkoutBook(fakeUserEmail, bookId);
     }
 
+    @GetMapping("/secure/ischeckoedout/byuser")
+    public boolean checkoutBookByUser(@RequestParam Long bookId){
+        String fakeUserEmail = "fakeUser@email.com";
+
+        return bookService.checkoutBookByUser(fakeUserEmail, bookId);
+    }
+
 
 }
