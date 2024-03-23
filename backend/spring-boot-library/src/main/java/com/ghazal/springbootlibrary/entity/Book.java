@@ -17,10 +17,10 @@ public class Book {
     private String author;
 
     @Column(name = "copies")
-    private String copies;
+    private int copies;
 
     @Column(name = "copies_available")
-    private String copiesAvailable;
+    private int copiesAvailable;
     @Column(name = "description")
     private String description;
 
