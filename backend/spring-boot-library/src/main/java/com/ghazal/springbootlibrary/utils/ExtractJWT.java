@@ -4,9 +4,9 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExtractJWT {
+public class ExtractJWT { // can be refactored further
 
-    public static String payloadJWTExtraction(String token) {
+    public static String payloadJWTExtraction(String token, String extraction) {
         token.replace("Bearer ", "");
         //JWT token parts are separated based on a dot
         String[] splitToken = token.split("\\.");
@@ -18,7 +18,7 @@ public class ExtractJWT {
         Map<String, String> map = new HashMap<>();
         for (String entry : entries) {
             String[] keyValue = entry.split(":");
-            if (keyValue[0].equals("\"sub\"")) { // get the sub key's value
+            if (keyValue[0].equals(extraction)) { // get the sub key's value
 
                 int remove = 1;
                 if (keyValue[1].endsWith("}")) { // making sure sub value is only the email itself
@@ -31,8 +31,8 @@ public class ExtractJWT {
                 map.put(keyValue[0], keyValue[1]);
             }
         }
-        if (map.containsKey("\"sub\"")) {
-            map.get("\"sub\"");
+        if (map.containsKey(extraction)) {
+            map.get(extraction);
         }
 
         return null;
