@@ -24,8 +24,11 @@ public class SecurityConfiguration {
 
         //protect endpoints with '/api/<type>/secure/' formatting
         http.authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/api/<type>/secure/")
-                        .authenticated())
+                authorize.requestMatchers("/api/books/secure/**")
+                        .authenticated()
+                        .anyRequest()
+                        .permitAll()
+                )
                 .oauth2ResourceServer(spec -> spec.jwt(Customizer.withDefaults()));
 
 
