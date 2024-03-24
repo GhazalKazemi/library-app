@@ -5,8 +5,13 @@ import { StarsReview } from "../Utils/StarsReview";
 import { CheckoutAndReview } from "./CheckoutAndReviewBox";
 import ReviewModel from "../../models/ReviewModel";
 import { LatestReviews } from "./LatestReviews";
+import { useOktaAuth } from "@okta/okta-react";
+import { error } from "console";
 
 export const BookCheckoutPage = () => {
+
+    const {authState} = useOktaAuth();
+
     const [book, setBook] = useState<BookModel>();
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(false);
@@ -16,8 +21,14 @@ export const BookCheckoutPage = () => {
     const [totalStars, setTotalStars] = useState(0);
     const [isLoadingReview, setIsLoadingReview] = useState(true);
 
+    // Number of Books Loaned State
+    const [currentLoansCount, setCurrentLoansCount] = useState(0);
+    const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
+
     // Take out the id from the path localhost:3000/checkout/5
     const bookId = (window.location.pathname).split('/')[2];
+
+    //Fetch a Book
     useEffect(() => {
         const fetchBook = async () => {
             const baseUrl = "http://localhost:8080"
@@ -51,6 +62,7 @@ export const BookCheckoutPage = () => {
         });
     }, []);
 
+    //Fetch a Book Review byId
     useEffect(() => {
         const fetchBookReviews = async () => {
             const baseUrl = "http://localhost:8080/api/";
@@ -95,7 +107,37 @@ export const BookCheckoutPage = () => {
 
     }, []);
 
-    if (isLoading || isLoadingReview) {
+    // Fetch Number of Books Loaned by Current User
+    useEffect(() => {
+        const fetchUsersCurrentBookCount = async () => {
+
+            if(authState && authState.isAuthenticated){
+                const url = `http://localhost:8080/api/books/secure/currentloans/count`;
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+                const currentLoansCountResponse = await fetch(url, requestOptions);
+                if(!currentLoansCountResponse.ok){
+                    throw new Error("Something went wrong while fetching user's loan counts.")
+                }
+                const currentLoansCountResponseJSON = await currentLoansCountResponse.json();
+                setCurrentLoansCount(currentLoansCountResponseJSON);
+            }
+            setIsLoadingCurrentLoansCount(false);
+
+        }
+        fetchUsersCurrentBookCount().catch((error: any) => {
+            setIsLoadingCurrentLoansCount(false);
+            setHttpError(error.message);
+
+        })
+    },[authState]);
+
+    if (isLoading || isLoadingReview || isLoadingCurrentLoansCount) {
         return (
             <SpinnerLoading />
         )
@@ -128,7 +170,7 @@ export const BookCheckoutPage = () => {
                             <StarsReview rating={totalStars} size={32} />
                         </div>
                     </div>
-                    <CheckoutAndReview book={book} mobile={false} />
+                    <CheckoutAndReview book={book} mobile={false} currentLoansCount={currentLoansCount}/>
                 </div>
                 <hr />
                 <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
@@ -151,7 +193,7 @@ export const BookCheckoutPage = () => {
                         <StarsReview rating={totalStars} size={32} />
                     </div>
                 </div>
-                <CheckoutAndReview book={book} mobile={true} />
+                <CheckoutAndReview book={book} mobile={true} currentLoansCount={currentLoansCount}/>
                 <hr />
                 <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
             </div>
