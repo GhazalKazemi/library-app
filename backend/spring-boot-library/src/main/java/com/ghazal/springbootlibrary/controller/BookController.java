@@ -2,6 +2,7 @@ package com.ghazal.springbootlibrary.controller;
 
 import com.ghazal.springbootlibrary.entity.Book;
 import com.ghazal.springbootlibrary.service.BookService;
+import com.ghazal.springbootlibrary.utils.ExtractJWT;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("http://localhost:3000")
@@ -9,31 +10,33 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/books")
 public class BookController {
 
-    private BookService bookService;
+    private final BookService bookService;
 
     public BookController(BookService bookService){
         this.bookService = bookService;
     }
 
     @PutMapping("/secure/checkout") //will be secure in the future!
-    public Book checkoutBook(@RequestParam Long bookId) throws Exception {
+    public Book checkoutBook(@RequestHeader("Authorization") String token , @RequestParam Long bookId) throws Exception {
         String fakeUserEmail = "fakeUser@email.com";
 
         return bookService.checkoutBook(fakeUserEmail, bookId);
     }
 
     @GetMapping("/secure/ischeckedout/byuser")
-    public boolean checkoutBookByUser(@RequestParam Long bookId){
+    public boolean checkoutBookByUser(@RequestHeader("Authorization") String token, @RequestParam Long bookId){
         String fakeUserEmail = "fakeUser@email.com";
 
         return bookService.checkoutBookByUser(fakeUserEmail, bookId);
     }
 
     @GetMapping("/secure/currentloans/count")
-    public int currentLoansCount(){
-        String fakeUserEmail = "fakeUser@email.com";
+    public int currentLoansCount(@RequestHeader("Authorization") String token){
+//        String fakeUserEmail = "fakeUser@email.com";
 
-        return bookService.currentLoansCount(fakeUserEmail);
+        String userEmail = ExtractJWT.payloadJWTExtraction(token);
+
+        return bookService.currentLoansCount(userEmail);
     }
 
 
