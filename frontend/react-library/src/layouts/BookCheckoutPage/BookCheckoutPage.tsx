@@ -25,6 +25,10 @@ export const BookCheckoutPage = () => {
     const [currentLoansCount, setCurrentLoansCount] = useState(0);
     const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
 
+    //Is the Book Checked out State
+    const [isBookCheckedOut, setIsBookCheckedOut] = useState(false);
+    const [isLoadingBookChekedOut, setIsLoadingBookCheckedOut] = useState(true);
+
     // Take out the id from the path localhost:3000/checkout/5
     const bookId = (window.location.pathname).split('/')[2];
 
@@ -137,7 +141,38 @@ export const BookCheckoutPage = () => {
         })
     },[authState]);
 
-    if (isLoading || isLoadingReview || isLoadingCurrentLoansCount) {
+    // Fetch If the book has been already checked out by current user 
+    useEffect(() => {
+        const fetchIsBookCheckedOut = async () => {
+            if(authState && authState.isAuthenticated){
+                const url = `http://localhost:8080/api/books/secure/ischeckedout/byuser?bookId=${bookId}`;
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+                const isBookCheckedOutResponse = await fetch(url, requestOptions);
+                if(!isBookCheckedOutResponse.ok){
+                    throw new Error("Something went wrong while checking if the user has already cheked out the book");
+                }
+                const isBookCheckedOutResponseJSON = await isBookCheckedOutResponse.json();
+                setIsBookCheckedOut(isBookCheckedOutResponseJSON);
+            }
+            setIsLoadingBookCheckedOut(false);
+
+        }
+        fetchIsBookCheckedOut().catch((error: any) => {
+            setIsLoadingBookCheckedOut(false);
+            setHttpError(error.message);
+        })
+    }, [authState]);
+
+    if (isLoading || 
+        isLoadingReview || 
+        isLoadingCurrentLoansCount || 
+        isLoadingBookChekedOut) {
         return (
             <SpinnerLoading />
         )
