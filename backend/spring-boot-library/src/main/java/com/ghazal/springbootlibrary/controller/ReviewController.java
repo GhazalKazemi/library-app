@@ -28,4 +28,14 @@ public class ReviewController {
         reviewService.postReview(userEmail, reviewRequest);
 
     }
+
+    @GetMapping("/secure/user/book")
+    public Boolean reviewBookByUser(@RequestHeader("Authorization") String token,
+                                    @RequestParam Long bookId) throws Exception {
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, Constants.USER_EMAIL_SUB_KEY);
+        if(userEmail == null){
+            throw new Exception("User email not found");
+        }
+        return reviewService.findAllReviewsByUser(userEmail, bookId);
+    }
 }

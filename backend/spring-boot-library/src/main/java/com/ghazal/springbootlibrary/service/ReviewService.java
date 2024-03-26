@@ -15,11 +15,9 @@ import java.util.Objects;
 @Transactional
 public class ReviewService {
 
-    private BookRepository bookRepository;
     private ReviewRepository reviewRepository;
 
-    public ReviewService(BookRepository bookRepository, ReviewRepository reviewRepository) {
-        this.bookRepository = bookRepository;
+    public ReviewService( ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
 
@@ -40,5 +38,13 @@ public class ReviewService {
         }
         review.setDate(Date.valueOf(LocalDate.now()));
         reviewRepository.save(review);
+    }
+    public Boolean findAllReviewsByUser(String userEmail, Long bookId){
+        Review reviewByUser = reviewRepository.findByUserEmailAndBookId(userEmail, bookId);
+        if( reviewByUser != null){
+            return true;
+        }else {
+            return false;
+        }
     }
 }
