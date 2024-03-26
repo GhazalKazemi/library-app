@@ -24,7 +24,7 @@ public class SecurityConfiguration {
 
         //protect endpoints with '/api/<type>/secure/' formatting
         http.authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/api/books/secure/**")
+                authorize.requestMatchers("/api/books/secure/**", "/api/reviews/secure/**")
                         .authenticated()
                         .anyRequest()
                         .permitAll()

@@ -8,7 +8,7 @@ public class Constants {
     public static final String PERIOD_SEPARATOR = "\\.";
 
     public static final String COLON = ":";
-    public static final String PAYLOAD_BEARER= "Bearer";
+    public static final String PAYLOAD_BEARER= "Bearer ";
 
     public static final String CLOSING_CURLY_BRACE= "}";
 
