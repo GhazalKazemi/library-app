@@ -21,6 +21,10 @@ export const BookCheckoutPage = () => {
     const [totalStars, setTotalStars] = useState(0);
     const [isLoadingReview, setIsLoadingReview] = useState(true);
 
+    // Has User Left a Review
+    const [hasReviewLeft, setHasReviewLeft] = useState(false);
+    const [isLoadingUserReview, setIsLoadingUserReview] = useState(true);
+
     // Number of Books Loaned State
     const [currentLoansCount, setCurrentLoansCount] = useState(0);
     const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
@@ -141,6 +145,34 @@ export const BookCheckoutPage = () => {
         })
     },[authState, isBookCheckedOut]);
 
+    //Fetch User's Review left for a Book
+    useEffect(() => {
+        const fetchReviewLeftByUser = async () => {
+            if(authState && authState.isAuthenticated){
+                const url = `http://localhost:8080/api/reviews/secure/user/book?${bookId}`;
+                const requestOptions = {
+                    method: 'GET',
+                    Headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+                const userReviewResponse = await fetch(url,requestOptions);
+                if(!userReviewResponse.ok){
+                    throw new Error("Something went wrong while fetching user's review for this book");
+                }
+                const userReviewResponseJSON = await userReviewResponse.json();
+                setHasReviewLeft(userReviewResponseJSON);
+            }
+            setIsLoadingUserReview(false);
+
+        }
+        fetchReviewLeftByUser().catch((error: any) => {
+            setIsLoadingUserReview(false);
+            setHttpError(error.message);
+        })
+    }, [authState]);
+
     // Fetch If the book has been already checked out by current user 
     useEffect(() => {
         const fetchIsBookCheckedOut = async () => {
@@ -172,7 +204,8 @@ export const BookCheckoutPage = () => {
     if (isLoading || 
         isLoadingReview || 
         isLoadingCurrentLoansCount || 
-        isLoadingBookChekedOut) {
+        isLoadingBookChekedOut ||
+        isLoadingUserReview) {
         return (
             <SpinnerLoading />
         )
