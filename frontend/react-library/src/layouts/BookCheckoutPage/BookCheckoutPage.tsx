@@ -113,7 +113,7 @@ export const BookCheckoutPage = () => {
             setHttpError(error);
         })
 
-    }, []);
+    }, [hasReviewLeft]);
 
     // Fetch Number of Books Loaned by Current User
     useEffect(() => {
@@ -149,7 +149,7 @@ export const BookCheckoutPage = () => {
     useEffect(() => {
         const fetchReviewLeftByUser = async () => {
             if(authState && authState.isAuthenticated){
-                const url = `http://localhost:8080/api/reviews/secure/user/book?${bookId}`;
+                const url = `http://localhost:8080/api/reviews/secure/user/book?bookId=${bookId}`;
                 const requestOptions = {
                     method: 'GET',
                     Headers: {
@@ -157,7 +157,8 @@ export const BookCheckoutPage = () => {
                         'Content-Type': 'application/json'
                     }
                 }
-                const userReviewResponse = await fetch(url,requestOptions);
+                const userReviewResponse = await fetch(url, requestOptions);
+                console.log(userReviewResponse)
                 if(!userReviewResponse.ok){
                     throw new Error("Something went wrong while fetching user's review for this book");
                 }
@@ -260,7 +261,7 @@ export const BookCheckoutPage = () => {
                     </div>
                     <CheckoutAndReview book={book} mobile={false} currentLoansCount={currentLoansCount} 
                     isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} 
-                    checkoutBook={checkoutBook}/>
+                    checkoutBook={checkoutBook} isReviewLeft={hasReviewLeft}/>
                 </div>
                 <hr />
                 <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
@@ -285,7 +286,7 @@ export const BookCheckoutPage = () => {
                 </div>
                 <CheckoutAndReview book={book} mobile={true} currentLoansCount={currentLoansCount} 
                 isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} 
-                checkoutBook={checkoutBook}/>
+                checkoutBook={checkoutBook} isReviewLeft={hasReviewLeft}/>
                 <hr />
                 <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
             </div>

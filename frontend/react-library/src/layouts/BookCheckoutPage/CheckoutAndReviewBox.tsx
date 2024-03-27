@@ -3,7 +3,7 @@ import BookModel from "../../models/BookModel";
 import { Link } from "react-router-dom";
 
 export const CheckoutAndReview: React.FC<{book: BookModel | undefined, mobile: boolean, currentLoansCount: number, 
-isAuthenticated: any, isCheckedOut: boolean, checkoutBook: any}> = (props) => {
+isAuthenticated: any, isCheckedOut: boolean, checkoutBook: any, isReviewLeft: boolean}> = (props) => {
     function renderSignInButton() {
         if(props.isAuthenticated){
             if(!props.isCheckedOut && props.currentLoansCount < 5){
@@ -15,6 +15,27 @@ isAuthenticated: any, isCheckedOut: boolean, checkoutBook: any}> = (props) => {
             }
         }
         return(<Link to={'/login'} className="btn btn-success btn-lg">Sign in</Link>)
+    }
+    function renderUserReview(){
+        if(props.isAuthenticated && !props.isReviewLeft){
+            return(
+                <p>
+                    Leave a review here.
+                </p>
+            )
+        }else if(props.isAuthenticated && props.isReviewLeft){
+            return(
+                <p>
+                    <b>Thank you for your review.</b>
+                </p>
+            )
+        }
+        return(
+            <div>
+                <hr/>
+                <p>Sing in to be able to leave a review.</p>
+            </div>
+        )
     }
     return(
         <div className={props.mobile ? 'card d-flex mt-5' : 'card col-3 container d-flex mb-5'}>
@@ -46,13 +67,12 @@ isAuthenticated: any, isCheckedOut: boolean, checkoutBook: any}> = (props) => {
                     </div>
                 </div>
                 {renderSignInButton()}
+
                 <hr />
                 <p className='mt-3'>
                     This number can change until placing order has been complete.
                 </p>
-                <p>
-                    Sign in to be able to leave a review.
-                </p>
+                {renderUserReview()}
             </div>
         </div>
     );
