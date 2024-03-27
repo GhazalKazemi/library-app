@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import ReviewModel from "../../../models/ReviewModel";
 import { SpinnerLoading } from "../../Utils/SpinnerLoading";
+import { Review } from "../../Utils/Review";
+import { Pagination } from "../../Utils/Pagination";
 
-export const ReviewListPage: React.FC<{}> = (props) => {
+export const ReviewListPage = () => {
     const [reviews, setReviews] = useState<ReviewModel[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
@@ -80,6 +82,20 @@ export const ReviewListPage: React.FC<{}> = (props) => {
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return(
-        <div></div>
+        <div className="container mt-5">
+            <div>
+                <h3>Comments: ({reviews.length})</h3>
+            </div>
+            <p>
+                {indexOfFirstReview + 1} to {lastItem} of {totalAmountOfReviews} items:
+            </p>
+            <div className="row">
+                {reviews.map(review => (
+                    <Review review={review} key={review.id} />
+                ))}
+            </div>
+
+            {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />}
+        </div>
     )
 }
