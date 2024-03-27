@@ -1,9 +1,10 @@
 import React from "react";
 import BookModel from "../../models/BookModel";
 import { Link } from "react-router-dom";
+import { LeaveAReview } from "../Utils/LeaveAReview";
 
 export const CheckoutAndReview: React.FC<{book: BookModel | undefined, mobile: boolean, currentLoansCount: number, 
-isAuthenticated: any, isCheckedOut: boolean, checkoutBook: any, isReviewLeft: boolean}> = (props) => {
+isAuthenticated: any, isCheckedOut: boolean, checkoutBook: any, isReviewLeft: boolean}> = (props) => { 
     function renderSignInButton() {
         if(props.isAuthenticated){
             if(!props.isCheckedOut && props.currentLoansCount < 5){
@@ -19,9 +20,7 @@ isAuthenticated: any, isCheckedOut: boolean, checkoutBook: any, isReviewLeft: bo
     function renderUserReview(){
         if(props.isAuthenticated && !props.isReviewLeft){
             return(
-                <p>
-                    Leave a review here.
-                </p>
+                <LeaveAReview />
             )
         }else if(props.isAuthenticated && props.isReviewLeft){
             return(
